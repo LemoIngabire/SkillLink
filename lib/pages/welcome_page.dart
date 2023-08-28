@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:skill_link/pages/chat_page.dart';
-import 'package:skill_link/pages/home_page.dart';
-import 'package:skill_link/widgets/drawWidget.dart';
 import 'login_page.dart';
 class WelcomePage extends StatelessWidget{
   @override

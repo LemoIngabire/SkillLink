@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skill_link/pages/message_page.dart';
 import 'package:skill_link/pages/home_page.dart';
 import 'package:skill_link/pages/chat_page.dart';
 class NavBarRoots extends StatefulWidget {
