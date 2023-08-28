@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:skill_link/pages/home_page.dart';
-class Messagepage extends StatelessWidget{
+class Messagepage extends StatefulWidget {
+  @override
+  State<Messagepage> createState() => _Messagepage();
+}
+class _Messagepage extends State<Messagepage>{
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +35,17 @@ class Messagepage extends StatelessWidget{
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(top: 8,right: 10),
+              padding: EdgeInsets.only(top: 8, right: 10),
               child: Icon(Icons.call,
                 color: Colors.white,
                 size: 16,
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: 8,right: 10),
+            Padding(padding: EdgeInsets.only(top: 8, right: 10),
               child: Icon(Icons.video_call,
                 color: Colors.white,
                 size: 16,),),
-            Padding(padding: EdgeInsets.only(top: 8,right: 10),
+            Padding(padding: EdgeInsets.only(top: 8, right: 10),
               child: Icon(Icons.more_vert,
                 color: Colors.white,
                 size: 16,),)
@@ -50,8 +54,8 @@ class Messagepage extends StatelessWidget{
       ),
       body: ListView.builder(
         itemCount: 10,
-        padding: EdgeInsets.only(top: 20,left: 15,right: 15),
-        itemBuilder: (context, index)=>HomePage(),
+        padding: EdgeInsets.only(top: 20, left: 15, right: 15),
+        itemBuilder: (context, index) => HomePage(),
       ),
       bottomSheet: Container(
         height: 65,
@@ -60,7 +64,10 @@ class Messagepage extends StatelessWidget{
             Padding(padding: EdgeInsets.only(left: 10),
               child: Container(
                 alignment: Alignment.centerRight,
-                width: MediaQuery.of(context).size.width /1.6,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width / 1.6,
                 child: TextFormField(
                   decoration: InputDecoration(
                       hintText: 'Message',
@@ -79,4 +86,6 @@ class Messagepage extends StatelessWidget{
       ),
 
     );
-  }}
+  }
+
+}

@@ -8,6 +8,7 @@ class RegisterPage extends StatefulWidget{
 class _RegisterPage  extends State<RegisterPage>{
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController regController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController levelController = TextEditingController();
   TextEditingController departmentController = TextEditingController();
@@ -52,6 +53,14 @@ class _RegisterPage  extends State<RegisterPage>{
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Name'
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                TextField(
+                  controller: regController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'RegNo'
                   ),
                 ),
                 const SizedBox(height: 10,),

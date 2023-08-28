@@ -14,10 +14,7 @@ class _NavBarRoots extends State<NavBarRoots>{
     HomePage(),
   //message screen
     ChatPage(),
-  //schedule screen
-    Container(),
-  //setting screen
-    Container(),
+
   ];
   @override
   Widget build(BuildContext context) {

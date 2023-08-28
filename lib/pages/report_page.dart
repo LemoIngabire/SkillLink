@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-class ReportedPage extends StatelessWidget{
+class ReportedPage extends StatefulWidget{
+  @override
+  State<ReportedPage> createState()=>_ReportedPage();
+  }
+  class _ReportedPage extends State<ReportedPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,4 +45,6 @@ class ReportedPage extends StatelessWidget{
         ]),
         )
     );
-  }}
+  }
+
+}

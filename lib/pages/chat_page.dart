@@ -1,5 +1,5 @@
-// import 'package:flutter/cupertino.dart';
- import 'package:flutter/material.dart';
+
+import 'package:flutter/material.dart';
 import 'package:skill_link/widgets/groupchat_widget.dart';
 import 'package:skill_link/widgets/personalchat_widget.dart';
 
@@ -7,8 +7,6 @@ import 'package:skill_link/widgets/personalchat_widget.dart';
 class ChatPage extends StatefulWidget{
   @override
   State<ChatPage> createState()=>_ChatPage();
-
-
 }
 
 class _ChatPage extends State<ChatPage>{

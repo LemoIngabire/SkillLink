@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-class AnnouncePage extends StatelessWidget{
+class AnnouncePage extends StatefulWidget {
+  @override
+  State<AnnouncePage> createState() => _AnnouncePage();
+}
+
+class _AnnouncePage extends State<AnnouncePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
