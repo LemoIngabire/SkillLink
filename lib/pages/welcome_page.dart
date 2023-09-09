@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skill_link/pages/chat_page.dart';
-import 'login_page.dart';
+import 'auth/login_page.dart';
 class WelcomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {

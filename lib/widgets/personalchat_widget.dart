@@ -14,4 +14,4 @@ class _PersonalChat extends State<PersonalChat>{
       ),
     );
   }
-}
+  }

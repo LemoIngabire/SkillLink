@@ -6,21 +6,10 @@ class DrawerWidget extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
-            padding: EdgeInsets.zero,
-              child: UserAccountsDrawerHeader(
-                  accountName: Text('Programer'),
-                  accountEmail: Text('Programer@gmail.com'),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('images/me.jpg'),
-                ),
-              ),
-          ),
-
           ListTile(
             leading: Icon(
               CupertinoIcons.person,
-              color: Colors.deepOrange,
+              color: Colors.blue,
             ),
             title: Text('My Profile',
               style: TextStyle(
@@ -32,7 +21,7 @@ class DrawerWidget extends StatelessWidget {
           ListTile(
             leading: Icon(
               CupertinoIcons.settings,
-              color: Colors.deepOrange,
+              color: Colors.blue,
             ),
             title: Text('setting',
               style: TextStyle(

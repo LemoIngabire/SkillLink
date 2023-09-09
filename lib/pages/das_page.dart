@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:skill_link/pages/register_page.dart';
 import 'package:skill_link/pages/report_page.dart';
 import 'announce_page.dart';
+import 'auth/register_page.dart';
 class DasPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {

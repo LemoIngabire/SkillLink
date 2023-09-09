@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:skill_link/pages/announcement_page.dart';
 
 class AppBarWidget extends StatelessWidget{
-  final GlobalKey<ScaffoldState> scaffoldKey;
-  AppBarWidget({required this.scaffoldKey});
   @override
   Widget build(BuildContext context) {
     return  Padding(padding: EdgeInsets.symmetric(vertical:15, horizontal: 15 ),
@@ -13,7 +11,7 @@ class AppBarWidget extends StatelessWidget{
         children: [
           InkWell(
             onTap: () {
-              scaffoldKey.currentState?.openDrawer();
+              Scaffold.of(context).openDrawer();
             },
             child: Container(
               padding: EdgeInsets.all(20),
@@ -49,7 +47,7 @@ class AppBarWidget extends StatelessWidget{
                   ),
                   ]
               ),
-                child: Icon(Icons.notifications),
+                child: Icon(Icons.notifications,color: Colors.deepOrange,),
             ),
           )
         ],
