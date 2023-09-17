@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:skill_link/pages/reset_page.dart';
 import 'package:skill_link/services/auth_services.dart';
 import 'package:skill_link/widgets/navbar_root.dart';
 import '../../helper/helper_function.dart';
+import '../../model/user_model.dart';
 import '../../services/database_services.dart';
 import '../../widgets/Widgets.dart';
 import '../das_page.dart';
@@ -18,23 +18,26 @@ class LoginPage extends StatefulWidget{
 }
 
 class _LoginPage  extends State<LoginPage> {
-  //bool passToggle = true;
   final formKey = GlobalKey<FormState>();
   String password = "";
-  String email ="";
+  String email = "";
   bool _isLoading = false;
-  AuthService authService=AuthService();
+  AuthService authService = AuthService();
+  User? user;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _isLoading ?
-        Center(
-          child:CircularProgressIndicator(
-            color: Theme.of(context).primaryColor,),
-          )
-          :SingleChildScrollView(
-        child:Padding(
+      body: _isLoading ? Center(
+        child: CircularProgressIndicator(
+          color: Theme
+              .of(context)
+              .primaryColor,),
+      )
+          : SingleChildScrollView(
+        child: Padding(
           padding:
           const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
 
@@ -128,40 +131,39 @@ class _LoginPage  extends State<LoginPage> {
                 ]),
           ),
         ),
-        ),
+      ),
     );
   }
 
-  login() async {
+  Future<void> login() async {
     if (formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      await authService
-          .loginWithUserNameandPassword(email, password)
-          .then((value) async {
-        if (value == true) {
-          QuerySnapshot snapshot =
-          await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-              .gettingUserData(email);
-          // saving the values to our shared preferences
-          await HelperFunctions.saveUserLoggedInStatus(true);
-          await HelperFunctions.saveUserRegNoSF(snapshot.docs[0]['regNo']);
-          await HelperFunctions.saveUserNameSF(snapshot.docs[1]['fullName']);
-          await HelperFunctions.saveUserEmailSF(email);
-          await HelperFunctions.saveUserLevelSF(snapshot.docs[3]['level']);
-          await HelperFunctions.saveUserDepartmentSF(snapshot.docs[4]['department']);
-          nextScreenReplace(context,  HomePage());
+      try {
+        UserCredential userCredential = await firebaseAuth
+            .signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        user = userCredential.user;
+
+        // Login was successful, you can navigate to the next screen.
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          // Handle the case where the user account was not found.
+          print('User not found');
+        } else if (e.code == 'wrong-password') {
+          // Handle the case where the user entered the wrong password.
+          print('Wrong password');
         } else {
-          showSnackbar(context, Colors.red, value);
-          setState(() {
-            _isLoading = false;
-          });
+          // Handle other Firebase Authentication errors.
+          print('Error: ${e.code}');
         }
-      });
+      }
     }
   }
-  }
+}
 
 
 
@@ -176,177 +178,174 @@ class _LoginPage  extends State<LoginPage> {
 
 
 
-
-
-
-    // return Material(
-    //     color: Colors.white,
-    //     child: SingleChildScrollView(
-    //       child: SafeArea(
-    //         child: Column(
-    //           children: [
-    //             SizedBox(height: 10,),
-    //             const Padding(padding: EdgeInsets.all(5),
-    //               child: Text('Log In Here',
-    //                 style: TextStyle(
-    //                     color: Colors.deepOrange,
-    //                     fontSize: 40,
-    //                     fontWeight: FontWeight.bold
-    //                 ),
-    //                 ),
-    //             ),
-    //             SizedBox(height: 5,),
-    //             const Padding(padding: EdgeInsets.all(12),
-    //               child: TextField(
-    //                 decoration: InputDecoration(
-    //                     border: OutlineInputBorder(),
-    //                     label:Text('Enter Username'),
-    //                     prefixIcon: Icon(Icons.person)
-    //                 ),
-    //               ),),
-    //             SizedBox(height: 5,),
-    //             Padding(padding: EdgeInsets.all(12),
-    //               child: TextField(
-    //                 obscureText: passToggle ? true : false,
-    //                 decoration: InputDecoration(
-    //                     border: OutlineInputBorder(),
-    //                     label:Text('Enter Password'),
-    //                     prefixIcon: Icon(Icons.lock),
-    //                     suffixIcon: InkWell(
-    //                         onTap: (){
-    //                           if(passToggle==true){
-    //                             passToggle= false;
-    //                           }
-    //                           else{
-    //                             passToggle=true;
-    //                           }
-    //                           setState(() {
-    //
-    //                           });
-    //                         },
-    //                         child: passToggle ?
-    //                         Icon(CupertinoIcons.eye_slash_fill) :
-    //                         Icon(CupertinoIcons.eye_fill)
-    //                     )
-    //                 ),
-    //               ),
-    //             ),
-    //
-    //               Padding(padding: EdgeInsets.symmetric(vertical: 15),
-    //                 child:Center(
-    //                 child: Row(
-    //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                   children: [
-    //                     TextButton(onPressed: (){
-    //                       Navigator.push(context, MaterialPageRoute(builder: (context)=>NavBarRoots(),),);
-    //                     },
-    //                       child: Text('Student',
-    //                         style: TextStyle(
-    //                             fontSize: 18,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.orange,
-    //
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     TextButton(onPressed: (){
-    //                        Navigator.push(context, MaterialPageRoute(builder: (context)=>DasPage(),),);
-    //                     },
-    //                       child: Text('DAS',
-    //                         style: TextStyle(
-    //                             fontSize: 18,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.orange
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ]),),
-    //             ),
-    //             Padding(padding: EdgeInsets.all(10),
-    //               child: SizedBox(width: double.infinity,
-    //                 child: Material(
-    //                   color: Colors.deepOrange,
-    //                   borderRadius: BorderRadius.circular(10),
-    //                   child: InkWell(
-    //                     onTap: (){
-    //                       //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(),),);
-    //                     },
-    //                     child: Padding(
-    //                       padding: EdgeInsets.symmetric(
-    //                           vertical: 15,horizontal: 40),
-    //                       child: Center(
-    //                         child: Text('Log In',style: TextStyle(
-    //                             fontSize: 22,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.white
-    //                         ),),
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //             SizedBox(height: 5,),
-    //             Row(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   Text("Forgot password",
-    //                     style: TextStyle(
-    //                       fontSize: 16,
-    //                       fontWeight: FontWeight.w500,
-    //                       color: Colors.black54,
-    //                     ),),
-    //                   TextButton(onPressed: (){
-    //                     Navigator.push(context, MaterialPageRoute(builder: (context)=>ResetPage(),),);
-    //                   },
-    //                     child: Text('reset',
-    //                       style: TextStyle(
-    //                           fontSize: 18,
-    //                           fontWeight: FontWeight.bold,
-    //                           color: Colors.orangeAccent
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ]),
-    //             const SizedBox(height: 5,),
-    //             // MyButton(
-    //             //   onTap: SignUserIn(),
-    //             // ),
-    //             const SizedBox(height: 5,),
-    //             const Padding(padding: EdgeInsets.symmetric(horizontal: 8.0),
-    //                 child: Row(
-    //                   children: [
-    //                     Expanded(child:
-    //                     Divider(
-    //                       thickness: 0.5,
-    //                       color: Colors.orangeAccent,
-    //                     ),
-    //                     ),
-    //                     Padding(
-    //                       padding: EdgeInsets.symmetric(horizontal: 8.0),
-    //                       child:
-    //                       Text('or continue with'
-    //                       ),
-    //                     ),
-    //                     Expanded(child: Divider(
-    //                       thickness: 0.5,
-    //                       color: Colors.grey,
-    //                     ),
-    //                     ),
-    //                   ],
-    //                 )
-    //             ),
-    //             const SizedBox(height: 15,),
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               children: [
-    //                 Image.asset('images/google.png',height: 72,
-    //                 )
-    //               ],
-    //             ),
-    //           ],),
-    //       ),
-    //     )
-    // );
-  //}
+// return Material(
+//     color: Colors.white,
+//     child: SingleChildScrollView(
+//       child: SafeArea(
+//         child: Column(
+//           children: [
+//             SizedBox(height: 10,),
+//             const Padding(padding: EdgeInsets.all(5),
+//               child: Text('Log In Here',
+//                 style: TextStyle(
+//                     color: Colors.deepOrange,
+//                     fontSize: 40,
+//                     fontWeight: FontWeight.bold
+//                 ),
+//                 ),
+//             ),
+//             SizedBox(height: 5,),
+//             const Padding(padding: EdgeInsets.all(12),
+//               child: TextField(
+//                 decoration: InputDecoration(
+//                     border: OutlineInputBorder(),
+//                     label:Text('Enter Username'),
+//                     prefixIcon: Icon(Icons.person)
+//                 ),
+//               ),),
+//             SizedBox(height: 5,),
+//             Padding(padding: EdgeInsets.all(12),
+//               child: TextField(
+//                 obscureText: passToggle ? true : false,
+//                 decoration: InputDecoration(
+//                     border: OutlineInputBorder(),
+//                     label:Text('Enter Password'),
+//                     prefixIcon: Icon(Icons.lock),
+//                     suffixIcon: InkWell(
+//                         onTap: (){
+//                           if(passToggle==true){
+//                             passToggle= false;
+//                           }
+//                           else{
+//                             passToggle=true;
+//                           }
+//                           setState(() {
+//
+//                           });
+//                         },
+//                         child: passToggle ?
+//                         Icon(CupertinoIcons.eye_slash_fill) :
+//                         Icon(CupertinoIcons.eye_fill)
+//                     )
+//                 ),
+//               ),
+//             ),
+//
+//               Padding(padding: EdgeInsets.symmetric(vertical: 15),
+//                 child:Center(
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     TextButton(onPressed: (){
+//                       Navigator.push(context, MaterialPageRoute(builder: (context)=>NavBarRoots(),),);
+//                     },
+//                       child: Text('Student',
+//                         style: TextStyle(
+//                             fontSize: 18,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.orange,
+//
+//                         ),
+//                       ),
+//                     ),
+//                     TextButton(onPressed: (){
+//                        Navigator.push(context, MaterialPageRoute(builder: (context)=>DasPage(),),);
+//                     },
+//                       child: Text('DAS',
+//                         style: TextStyle(
+//                             fontSize: 18,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.orange
+//                         ),
+//                       ),
+//                     ),
+//                   ]),),
+//             ),
+//             Padding(padding: EdgeInsets.all(10),
+//               child: SizedBox(width: double.infinity,
+//                 child: Material(
+//                   color: Colors.deepOrange,
+//                   borderRadius: BorderRadius.circular(10),
+//                   child: InkWell(
+//                     onTap: (){
+//                       //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(),),);
+//                     },
+//                     child: Padding(
+//                       padding: EdgeInsets.symmetric(
+//                           vertical: 15,horizontal: 40),
+//                       child: Center(
+//                         child: Text('Log In',style: TextStyle(
+//                             fontSize: 22,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.white
+//                         ),),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 5,),
+//             Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text("Forgot password",
+//                     style: TextStyle(
+//                       fontSize: 16,
+//                       fontWeight: FontWeight.w500,
+//                       color: Colors.black54,
+//                     ),),
+//                   TextButton(onPressed: (){
+//                     Navigator.push(context, MaterialPageRoute(builder: (context)=>ResetPage(),),);
+//                   },
+//                     child: Text('reset',
+//                       style: TextStyle(
+//                           fontSize: 18,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.orangeAccent
+//                       ),
+//                     ),
+//                   ),
+//                 ]),
+//             const SizedBox(height: 5,),
+//             // MyButton(
+//             //   onTap: SignUserIn(),
+//             // ),
+//             const SizedBox(height: 5,),
+//             const Padding(padding: EdgeInsets.symmetric(horizontal: 8.0),
+//                 child: Row(
+//                   children: [
+//                     Expanded(child:
+//                     Divider(
+//                       thickness: 0.5,
+//                       color: Colors.orangeAccent,
+//                     ),
+//                     ),
+//                     Padding(
+//                       padding: EdgeInsets.symmetric(horizontal: 8.0),
+//                       child:
+//                       Text('or continue with'
+//                       ),
+//                     ),
+//                     Expanded(child: Divider(
+//                       thickness: 0.5,
+//                       color: Colors.grey,
+//                     ),
+//                     ),
+//                   ],
+//                 )
+//             ),
+//             const SizedBox(height: 15,),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Image.asset('images/google.png',height: 72,
+//                 )
+//               ],
+//             ),
+//           ],),
+//       ),
+//     )
+// );
+//}
 //}

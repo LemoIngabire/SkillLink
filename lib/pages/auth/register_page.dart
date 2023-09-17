@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skill_link/services/auth_services.dart';
 import '../../helper/helper_function.dart';
+import '../../model/user_model.dart';
 import '../../widgets/Widgets.dart';
 import '../das_page.dart';
 import '../home_page.dart';
@@ -14,21 +15,27 @@ class _RegisterPage  extends State<RegisterPage> {
 
   final formKey = GlobalKey<FormState>();
   String regNo = "";
-  String fullName = "";
+  String name = ""; // Define 'name' variable
   String email = "";
   String level = "";
   String department = "";
   String password = "";
+  List<String> interest = [];
+  List<Widget> interestFields = [];
   bool isLoading = false;
-  AuthService authService=AuthService();
+  AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading? Center(
+      body: isLoading
+          ? Center(
         child: CircularProgressIndicator(
-          color: Theme.of(context).primaryColor,),):
+          color: Theme
+              .of(context)
+              .primaryColor,),) :
       SingleChildScrollView(
-        child:Padding(
+        child: Padding(
             padding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
 
@@ -67,11 +74,11 @@ class _RegisterPage  extends State<RegisterPage> {
                     SizedBox(height: 5,),
                     TextFormField(
                         decoration: textInputDecoration.copyWith(
-                          labelText: "FullName",
+                          labelText: "Name",
                         ),
                         onChanged: (val) {
                           setState(() {
-                            fullName = val;
+                            name = val;
                           });
                         },
 
@@ -144,7 +151,6 @@ class _RegisterPage  extends State<RegisterPage> {
                         }
                     ),
 
-
                     const SizedBox(height: 5,),
                     TextFormField(
                         obscureText: true,
@@ -200,129 +206,47 @@ class _RegisterPage  extends State<RegisterPage> {
       setState(() {
         isLoading = true;
       });
-      await authService
-          .registerUserWithEmailandPassword(fullName, regNo , email, level, department, password)
-          .then((value) async {
-        if (value == true) {
-          //saving the shared preference state
-          await HelperFunctions.saveUserLoggedInStatus(true);
-          await HelperFunctions.saveUserNameSF(fullName);
-          await HelperFunctions.saveUserRegNoSF(regNo);
-          await HelperFunctions.saveUserEmailSF(email);
-          await HelperFunctions.saveUserLevelSF(level);
-          await HelperFunctions.saveUserDepartmentSF(department);
-          nextScreenReplace(context, HomePage());
-        } else {
-          showSnackbar(context, Colors.red, value);
-          setState(() {
-            isLoading = false;
-          });
-        }
+      final registrationResult = await authService
+          .registerUserWithEmailandPassword(
+        name,
+        regNo,
+        email,
+        level,
+        department,
+        password,
+        interest,
+      );
+      if (registrationResult == true) {
+        //saving the shared preference state
+        await HelperFunctions.saveUserLoggedInStatus(true);
+        await HelperFunctions.saveUserNameSF(name);
+        await HelperFunctions.saveUserRegNoSF(regNo);
+        await HelperFunctions.saveUserEmailSF(email);
+        await HelperFunctions.saveUserLevelSF(level);
+        await HelperFunctions.saveUserDepartmentSF(department);
+        nextScreenReplace(context, HomePage());
+      } else {
+        showSnackbar(context, Colors.red, registrationResult);
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+    void addInterestField() {
+      setState(() {
+        interestFields.add(
+          TextFormField(
+            decoration: textInputDecoration.copyWith(
+              labelText: "Interest",
+            ),
+            onChanged: (val) {
+              setState(() {
+                interest.add(val);
+              });
+            },
+          ),
+        );
       });
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   TextEditingController nameController = TextEditingController();
-//   TextEditingController regController = TextEditingController();
-//   TextEditingController emailController = TextEditingController();
-//   TextEditingController levelController = TextEditingController();
-//   TextEditingController departmentController = TextEditingController();
-//   TextEditingController genderController = TextEditingController();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Registration form'),),
-//         body: Container(
-//           child: ListView(
-//               padding: const EdgeInsets.all(20),
-//               children: [
-//                 const SizedBox(height: 10,),
-//                 TextField(
-//                   controller: departmentController,
-//                   decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                       hintText: 'Department'
-//                   ),
-//                 ),
-//                 const SizedBox(height: 10,),
-//                 TextField(
-//                   controller: levelController,
-//                   decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                       hintText: 'Level'
-//                   ),
-//                 ),
-//                 const SizedBox(height: 10,),
-//                 TextField(
-//                   controller: emailController,
-//                   decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                       hintText: 'Email'
-//                   ),
-//                 ),
-//
-//                 const SizedBox(height: 10,),
-//                 TextField(
-//                   controller: nameController,
-//                   decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                       hintText: 'Name'
-//                   ),
-//                 ),
-//                 const SizedBox(height: 10,),
-//                 TextField(
-//                   controller: regController,
-//                   decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                       hintText: 'RegNo'
-//                   ),
-//                 ),
-//                 const SizedBox(height: 10,),
-//                 TextField(
-//                   controller: genderController,
-//                   decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                       hintText: 'Gender'
-//                   ),
-//                 ),
-//                 const SizedBox(height: 20,),
-//                 ElevatedButton(onPressed: (){
-//                   //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage(),),);
-//                 },
-//                   child: Text('Register',style: TextStyle(
-//                       fontSize: 22,
-//                       fontWeight: FontWeight.bold,
-//                       color: Colors.white
-//                   ),),
-//                 ),
-//                 // print(),
-//               ]
-//           ),
-//         )
-//     );
-//   }
-// }

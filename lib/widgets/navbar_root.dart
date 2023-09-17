@@ -13,7 +13,7 @@ class _NavBarRoots extends State<NavBarRoots>{
     //home screen
     HomePage(),
   //message screen
-    ChatPage(),
+   // ChatPage(groupId: '', groupName: '', fullName: '',),
 
   ];
   @override

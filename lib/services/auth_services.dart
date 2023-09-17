@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../helper/helper_function.dart';
+import '../model/user_model.dart';
 import 'database_services.dart';
 class AuthService{
   final FirebaseAuth firebaseAuth =FirebaseAuth.instance;
 
 // register
 Future registerUserWithEmailandPassword(
-    String regNo,String fullName,String email,String level, String department, String password) async {
+    String regNo,String Name,String email,String level, String department, String password, List<String> interest) async {
   try {
     User user = (await firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password))
@@ -14,7 +16,7 @@ Future registerUserWithEmailandPassword(
 
     if (user != null) {
       // call our database service to update the user data.
-      await DatabaseService(uid: user.uid).savingUserData(fullName,regNo,level,department, email);
+      await DatabaseService(uid: user.uid).savingUserData(Name,regNo,email,level,department,interest);
       return true;
     }
   } on FirebaseAuthException catch (e) {
@@ -48,6 +50,25 @@ Future registerUserWithEmailandPassword(
       await firebaseAuth.signOut();
     } catch (e) {
       return null;
+    }
+  }
+}
+class FirebaseService {
+  static Future<void> addInterest(String interest) async {
+    try {
+      // Replace 'yourUserId' with the actual user's ID
+      String userId = 'yourUserId';
+
+      // Update the interests in Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({
+        'interests': FieldValue.arrayUnion([interest]),
+      });
+    } catch (error) {
+      // Handle errors
+      print('Error adding interest: $error');
     }
   }
 }

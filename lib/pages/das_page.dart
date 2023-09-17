@@ -24,7 +24,7 @@ class DasPage extends StatelessWidget{
                                 },
                                 child: Icon(
                                   Icons.arrow_back_ios_new,
-                                  color: Colors.deepOrange,
+                                  color: Colors.blue,
                                   size: 25,
                                 ),
                               ),
@@ -35,7 +35,7 @@ class DasPage extends StatelessWidget{
                                   style: TextStyle(
                                       fontSize: 35,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.deepOrange
+                                      color: Colors.blue
                                   ),),
                               ),
                             ]),

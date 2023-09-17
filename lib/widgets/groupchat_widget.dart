@@ -1,17 +1,14 @@
-import'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 class GroupChat extends StatefulWidget {
-  @override
-  State<GroupChat> createState() => _GroupChat();
+  const GroupChat({super.key});
 
+  @override
+  State<GroupChat> createState() => _GroupChatState();
 }
 
-class _GroupChat extends State<GroupChat>{
+class _GroupChatState extends State<GroupChat> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text('Groups',)
-      ),
-    );
+    return const Placeholder();
   }
 }

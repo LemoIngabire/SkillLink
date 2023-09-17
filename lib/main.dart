@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:skill_link/helper/helper_function.dart';
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
-      home: _isSignedIn? HomePage() : LoginPage(),
+      home: _isSignedIn? WelcomePage() : const RegisterPage(),
     );
   }
 

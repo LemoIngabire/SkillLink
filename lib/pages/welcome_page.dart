@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:skill_link/pages/chat_page.dart';
 import 'auth/login_page.dart';
-class WelcomePage extends StatelessWidget{
+import 'auth/register_page.dart';
+import 'das_page.dart';
+class WelcomePage extends StatefulWidget{
+  const WelcomePage({super.key});
+
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -16,11 +25,11 @@ class WelcomePage extends StatelessWidget{
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(),),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DasPage(),),);
                   },
                   child: Text('Skip',
                     style: TextStyle(
-                        color: Colors.orange,
+                        color: Colors.blue,
                         fontSize: 20
                     ),),
                 ),
@@ -29,9 +38,9 @@ class WelcomePage extends StatelessWidget{
               Padding(padding: EdgeInsets.all(5),
                 child: Image.asset('images/natural.jpg',height: 250,),),
               SizedBox(height: 15),
-              Text('Seek help from peers',
+              const Text('Seek help from peers',
                 style: TextStyle(
-                    color: Colors.deepOrange,
+                    color: Colors.blue,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
@@ -51,13 +60,13 @@ class WelcomePage extends StatelessWidget{
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Material(
-                    color: Colors.deepOrange,
+                    color: Colors.blue,
                     borderRadius: BorderRadius.circular(10),
                     child: InkWell(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage(),),);
                       },
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 15,horizontal: 40),
                         child: Text('Start'),
@@ -71,5 +80,4 @@ class WelcomePage extends StatelessWidget{
       ),
     );
   }
-
 }
